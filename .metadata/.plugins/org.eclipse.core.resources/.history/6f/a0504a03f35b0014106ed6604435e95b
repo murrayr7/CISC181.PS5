@@ -1,0 +1,111 @@
+package com.example.futurevalueofinvestment;
+
+import CISC181.Calcengine.Calculator;
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+public class MainActivity extends Activity {
+
+	private Spinner yearValueSpinner;
+	private EditText investmentAmount;
+	private EditText interestRate;
+	private EditText futureValue;
+	private Button calculate;
+
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		yearValueSpinner = (Spinner) findViewById(R.id.spinner1);
+
+		investmentAmount = (EditText) findViewById(R.id.editText1);
+		investmentAmount.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+				checkReady();}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+		});
+		interestRate = (EditText) findViewById(R.id.editText2);
+		interestRate.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void afterTextChanged(Editable s) {
+				checkReady();}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+		});
+
+		futureValue = (EditText)findViewById(R.id.editText3);
+		calculate = (Button) findViewById(R.id.button1);
+		
+		calculate.setOnClickListener(new OnClickListener(){
+			
+			@Override
+			public void onClick(View v){
+				Ready();
+			}
+			
+		});
+	}
+
+
+	private void checkReady() {
+		if( (!(investmentAmount.getText().toString().equals("")))  &
+				(!(interestRate.getText().toString().equals(""))) ){
+			calculate.setEnabled(true);
+			
+		}else
+			calculate.setEnabled(false);	
+		
+	}
+
+	private void Ready() {
+		double amount = Double.parseDouble(investmentAmount.getText().toString());
+		double inter = Double.parseDouble(interestRate.getText().toString());
+		double year = Double.parseDouble((String) yearValueSpinner.getSelectedItem());
+		Calculator calc =  new Calculator(amount,inter,year);
+		String futVal = String.format("%.2f",calc.getFutureValue());
+		futureValue.setText(futVal);
+		
+		
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}
